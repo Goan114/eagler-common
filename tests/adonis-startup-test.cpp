@@ -296,13 +296,14 @@ static void interrupted_mesh(unsigned count,unsigned slowSeat,AdonisMode mode,st
     }
 }
 void spectator_timing_identity(){
-    for(const unsigned game:{8u,10u,11u}){
+    for(const unsigned game:{8u,10u,11u,15u}){
         AdonisSpectatorTiming timing;
         timing.game=game;timing.mode=1;timing.delay=1;timing.fullDelay=1;
         timing.sessionId=123;timing.gameplayAbi=456;timing.rttP95Us=32000;
         timing.samples=120;timing.automatic=true;
         auto bytes=timing.Encode();AdonisSpectatorTiming decoded;
         assert(bytes.size()==40);
+        assert(bytes[1]==(game==8?'8':game==10?'A':game==11?'B':'F'));
         assert(AdonisSpectatorTiming::Decode(bytes.data(),bytes.size(),decoded));
         assert(decoded.game==game&&decoded.mode==1&&decoded.prediction==0);
         assert(decoded.sessionId==timing.sessionId&&decoded.gameplayAbi==timing.gameplayAbi);
